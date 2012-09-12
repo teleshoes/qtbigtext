@@ -60,7 +60,7 @@ def main():
 class QtBigText(QVBoxLayout):
   def __init__(self):
     QVBoxLayout.__init__(self)
-    self.geometry = QDesktopWidget().screenGeometry()
+    self.geometry = QDesktopWidget().availableGeometry()
   def setText(self, text):
     self.clear()
     self.font = self.selectFont(text)
