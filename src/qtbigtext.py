@@ -8,14 +8,7 @@
 
 from PySide.QtGui import *
 
-import datetime
 import sys
-from time import sleep
-
-import sys
-import re
-import time
-import subprocess
 
 TYPEFACE= "Inconsolata"
 MIN_FONT_PT = 4
