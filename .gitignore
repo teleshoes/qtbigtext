@@ -1,0 +1,4 @@
+build/
+qtbigtext*.deb
+build-stamp
+configure-stamp
