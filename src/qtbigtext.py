@@ -64,11 +64,11 @@ class QtBigText(QVBoxLayout):
     self.setContentsMargins(0,0,0,0)
   def setText(self, text):
     self.clear()
-    self.font = self.selectFont(text)
-    for row in self.getRows(text):
+    font = self.constructFont(self.selectPointSize(text))
+    for row in self.parseGrid(text, font):
       rowLabel = QLabel(row)
       rowLabel.setWordWrap(False)
-      rowLabel.setFont(self.font)
+      rowLabel.setFont(font)
       self.addWidget(rowLabel)
   def clear(self):
     while self.count() > 0:
@@ -84,29 +84,36 @@ class QtBigText(QVBoxLayout):
     rows = self.screenHeight() / h
     cols = self.screenWidth() / w
     return (rows, cols)
-  def getRows(self, s):
+  def parseGrid(self, text, font):
     #TODO implement word wrap here
-    rows, cols = self.calculateGrid(self.font)
-    for x in xrange(0, len(s), cols):
-      yield s[x:x+cols]
-  def textFits(self, text, rows, cols):
-    #TODO implement word wrap here
-    return len(text) <= rows * cols
-  def selectFont(self, text):
-    minPt = MIN_FONT_PT
-    maxPt = MAX_FONT_PT
-    print str(minPt) + " - " + str(maxPt)
-    while minPt < maxPt - 1:
-      mid = (minPt + maxPt) / 2
-      rows, cols = self.calculateGrid(QFont(TYPEFACE, mid))
-      if self.textFits(text, rows, cols):
-        minPt = mid
-      else:
-        maxPt = mid-1
-      print str(minPt) + " - " + str(maxPt)
-    font = QFont(TYPEFACE, maxPt)
+    rows, cols = self.calculateGrid(font)
+    if len(text) > (rows * cols):
+      return None
+    else:
+      return self.splitAt(text, cols)
+  def splitAt(self, s, n):
+    for i in xrange(0, len(s), n):
+      yield s[i:i+n]
+  def textFits(self, text, font):
+    return self.parseGrid(text, font) != None
+  def constructFont(self, pointSize):
+    font = QFont(TYPEFACE, pointSize)
     font.setStyleStrategy(QFont.PreferAntialias)
     return font
+  def selectPointSize(self, text):
+    minPt = MIN_FONT_PT
+    maxPt = MAX_FONT_PT
+    midPt = (minPt + maxPt) / 2
+    print str(minPt) + " - " + str(maxPt)
+    while minPt < midPt:
+      font = self.constructFont(midPt)
+      if self.textFits(text, font):
+        minPt = midPt
+      else:
+        maxPt = midPt-1
+      midPt = (minPt + maxPt) / 2
+      print str(midPt)
+    return midPt
 
 if __name__ == "__main__":
   sys.exit(main())
