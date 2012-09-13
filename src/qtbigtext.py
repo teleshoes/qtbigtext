@@ -86,12 +86,32 @@ class QtBigText(QVBoxLayout):
     cols = self.screenWidth() / w
     return (rows, cols)
   def parseGrid(self, text, font):
-    #TODO implement word wrap here
     rows, cols = self.calculateGrid(font)
     if len(text) > (rows * cols):
       return None
     else:
-      return self.splitAt(text, cols)
+      grid = self.wordWrap(text, cols)
+      if len(grid) > rows:
+        return None
+      else:
+        return grid
+  def wordWrap(self, text, cols):
+    lines = []
+    start = 0
+    brk = start+cols
+    i = 0
+    length = len(text)
+    while i < length:
+      c = text[i]
+      if c == " ":
+        brk = i+1
+      i += 1
+      if i - start > cols or i >= length:
+        lines.append(text[start:brk])
+        start = brk
+        brk=start+cols
+    return lines
+
   def splitAt(self, s, n):
     for i in xrange(0, len(s), n):
       yield s[i:i+n]
