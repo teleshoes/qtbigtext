@@ -47,7 +47,6 @@ def main():
     else:
       s = sampleText
     s = s.replace("\t", "    ")
-    s = s.replace("\n", " ")
     app = QApplication([])
 
     qtBigText = QtBigText()
@@ -103,6 +102,10 @@ class QtBigText(QVBoxLayout):
     length = len(text)
     while i < length:
       c = text[i]
+      if c == "\n":
+        lines.append(text[start:i])
+        brk=start+cols
+        start = i+1
       if c == " ":
         brk = i+1
       i += 1
