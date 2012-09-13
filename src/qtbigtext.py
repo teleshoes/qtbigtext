@@ -46,6 +46,7 @@ def main():
       s = ' '.join(sys.argv[1:])
     else:
       s = sampleText
+    s = s.replace("\t", "    ")
     s = s.replace("\n", " ")
     app = QApplication([])
 
