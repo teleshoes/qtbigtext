@@ -97,22 +97,32 @@ class QtBigText(QVBoxLayout):
   def wordWrap(self, text, cols):
     lines = []
     start = 0
-    brk = start+cols
-    i = 0
+    end = start + cols
     length = len(text)
-    while i < length:
+    for i in range(0, length):
+      if start+cols >= length:
+        lines += text[start:].split("\n")
+        break
+
       c = text[i]
+      forceNew = False
       if c == "\n":
-        lines.append(text[start:i])
-        brk=start+cols
-        start = i+1
-      if c == " ":
-        brk = i+1
-      i += 1
-      if i - start > cols or i >= length:
-        lines.append(text[start:brk])
-        start = brk
-        brk=start+cols
+        end = i+1
+        forceNew = True
+      elif c == " ":
+        end = i+1
+
+      if start + i >= cols or forceNew:
+        lines.append(text[start:end])
+        start = end
+        end = start + cols
+
+    lines = map (lambda x: x.replace('\n', ''), lines)
+
+    #remove empty trailing lines
+    while len(lines) > 0 and lines[-1] == "":
+      del lines[-1]
+
     return lines
 
   def splitAt(self, s, n):
