@@ -7,6 +7,7 @@
 # (at your option) any later version.
 
 from PySide.QtGui import *
+from PySide.QtCore import *
 
 import os
 import sys
@@ -18,6 +19,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 TYPEFACE= "Inconsolata"
 MIN_FONT_PT = 4
 MAX_FONT_PT = 600
+SCREEN_GEOMETRY_FORCE = QRect(0, 0, 854, 480)
 
 sampleText = ( ""
   + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod "
@@ -81,6 +83,8 @@ class QtBigText(QVBoxLayout):
   def __init__(self):
     QVBoxLayout.__init__(self)
     self.geometry = QDesktopWidget().availableGeometry()
+    if SCREEN_GEOMETRY_FORCE != None:
+      self.geometry = SCREEN_GEOMETRY_FORCE
     self.setContentsMargins(0,0,0,0)
   def setText(self, text):
     self.clear()
@@ -119,7 +123,7 @@ class QtBigText(QVBoxLayout):
     start = 0
     end = start + cols
     length = len(text)
-    for i in range(0, length):
+    for i in range(length):
       if start+cols >= length:
         lines += text[start:].split("\n")
         break
