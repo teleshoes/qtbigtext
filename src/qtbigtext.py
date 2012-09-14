@@ -21,6 +21,7 @@ MIN_FONT_PT = 4
 MAX_FONT_PT = 600
 SCREEN_GEOMETRY_FORCE = QRect(0, 0, 854, 480)
 
+sampleTextFile = "/home/user/MyDocs/qtbigtext.txt"
 sampleText = ( ""
   + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod "
   + "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
@@ -56,6 +57,14 @@ def readStdin():
       break
   return sBuf
 
+def readFile(path):
+  try:
+    with open(path) as f:
+      return f.read()
+  except IOError:
+    return ''
+
+
 def main():
   if len(sys.argv) == 2 and sys.argv[1] == '-h':
     print usage
@@ -66,6 +75,9 @@ def main():
     else:
       s = readStdin()
     s = s.replace("\t", "    ")
+
+    if s == "":
+      s = readFile(sampleTextFile)
 
     if s == "":
       s = sampleText
