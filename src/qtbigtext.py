@@ -8,7 +8,9 @@
 
 from PySide.QtGui import *
 
+import os
 import sys
+import fcntl
 import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -37,6 +39,21 @@ usage = ("Usage:\n"
   + "  " + name + " -h  show this message\n"
 )
 
+def readStdin():
+  fd = sys.stdin.fileno()
+  fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+  fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+  sBuf = ''
+  while True:
+    try:
+      s = os.read(fd, 512)
+    except:
+      s = ''
+    sBuf += s
+    if s == "":
+      break
+  return sBuf
+
 def main():
   if len(sys.argv) == 2 and sys.argv[1] == '-h':
     print usage
@@ -45,8 +62,11 @@ def main():
     if len(sys.argv) > 1:
       s = ' '.join(sys.argv[1:])
     else:
-      s = sampleText
+      s = readStdin()
     s = s.replace("\t", "    ")
+
+    if s == "":
+      s = sampleText
     app = QApplication([])
 
     qtBigText = QtBigText()
