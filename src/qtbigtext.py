@@ -162,7 +162,6 @@ class QtBigText(QVBoxLayout):
     minPt = MIN_FONT_PT
     maxPt = MAX_FONT_PT
     midPt = (minPt + maxPt) / 2
-    print str(minPt) + " - " + str(maxPt)
     while minPt < midPt:
       font = self.constructFont(midPt)
       if self.textFits(text, font):
@@ -170,7 +169,6 @@ class QtBigText(QVBoxLayout):
       else:
         maxPt = midPt-1
       midPt = (minPt + maxPt) / 2
-      print str(midPt)
     return midPt
 
 if __name__ == "__main__":
