@@ -132,7 +132,7 @@ class QtBigText(QVBoxLayout):
       elif c == " ":
         end = i+1
 
-      if start + i >= cols or forceNew:
+      if i - start >= cols or forceNew:
         lines.append(text[start:end])
         start = end
         end = start + cols
