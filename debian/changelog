@@ -1,3 +1,7 @@
+qtbigtext (0.0.2) UNRELEASED; urgency=low
+  * Implemented word wrap, added stdin processing
+ -- teleshoes <elliot.wolk@gmail.com>  Thu, 13 Sep 2012 02:53:37 +0100
+
 qtbigtext (0.0.1) UNRELEASED; urgency=low
   * Initial release.
  -- teleshoes <elliot.wolk@gmail.com>  Wed, 12 Sep 2012 16:22:37 +0100
