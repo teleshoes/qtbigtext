@@ -19,7 +19,8 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 TYPEFACE= "Inconsolata"
 MIN_FONT_PT = 4
 MAX_FONT_PT = 600
-SCREEN_GEOMETRY_FORCE = QRect(0, 0, 854, 480)
+SCREEN_GEOMETRY_FORCE = None
+#SCREEN_GEOMETRY_FORCE = QRect(0, 0, 854, 480)
 
 sampleTextFile = "/home/user/MyDocs/qtbigtext.txt"
 sampleText = ( ""
