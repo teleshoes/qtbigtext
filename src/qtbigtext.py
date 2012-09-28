@@ -102,7 +102,18 @@ class QtBigText(QVBoxLayout):
   def setText(self, text):
     self.clear()
     font = self.constructFont(self.selectPointSize(text))
-    for row in self.parseGrid(text, font):
+    grid = self.parseGrid(text, font)
+
+    if grid == None:
+      print >>sys.stderr, 'text too big'
+      text = "!"
+      font = self.constructFont(self.selectPointSize(text))
+      grid = self.parseGrid(text, font)
+      if grid == None:
+        print >>sys.stderr, 'failure: could not fit one character on screen'
+        sys.exit(1)
+
+    for row in grid:
       rowLabel = QLabel(row)
       rowLabel.setWordWrap(False)
       rowLabel.setFont(font)
