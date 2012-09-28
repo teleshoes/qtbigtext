@@ -137,10 +137,6 @@ class QtBigText(QVBoxLayout):
     end = start + cols
     length = len(text)
     for i in range(length):
-      if start+cols >= length:
-        lines += text[start:].split("\n")
-        break
-
       c = text[i]
       forceNew = False
       if c == "\n":
@@ -153,6 +149,10 @@ class QtBigText(QVBoxLayout):
         lines.append(text[start:end])
         start = end
         end = start + cols
+
+      if start+cols >= length:
+        lines += text[start:].split("\n")
+        break
 
     lines = map (lambda x: x.replace('\n', ''), lines)
 
