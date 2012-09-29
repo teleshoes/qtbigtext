@@ -1,3 +1,7 @@
+qtbigtext (0.0.4) UNRELEASED; urgency=low
+  * Fixed oversize text bug, fixed missing last line bug
+ -- teleshoes <elliot.wolk@gmail.com>  Fri, 28 Sep 2012 20:00:57 +0100
+
 qtbigtext (0.0.3) UNRELEASED; urgency=low
   * Bundled Inconsolata, added an icon and desktop launcher, moved default text to MyDocs
  -- teleshoes <elliot.wolk@gmail.com>  Fri, 14 Sep 2012 03:51:10 +0100
