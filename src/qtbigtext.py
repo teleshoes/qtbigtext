@@ -16,6 +16,11 @@ import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+BG_COLOR = "black"
+FG_COLOR = "green"
+css = "QWidget { background-color : %s; color : %s;}" % (
+  BG_COLOR, FG_COLOR)
+
 TYPEFACE= "Inconsolata"
 MIN_FONT_PT = 4
 MAX_FONT_PT = 600
@@ -83,6 +88,7 @@ def main():
     if s == "":
       s = sampleText
     app = QApplication([])
+    app.setStyleSheet(css)
 
     qtBigText = QtBigText()
     qtBigText.setText(s)
