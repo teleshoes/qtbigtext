@@ -17,7 +17,7 @@ import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 BG_COLOR = "black"
-FG_COLOR = "green"
+FG_COLOR = "white"
 css = "QWidget { background-color : %s; color : %s;}" % (
   BG_COLOR, FG_COLOR)
 
