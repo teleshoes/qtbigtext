@@ -120,10 +120,12 @@ class QtBigText(QVBoxLayout):
         sys.exit(1)
 
     for row in grid:
-      rowLabel = QLabel(row)
-      rowLabel.setWordWrap(False)
-      rowLabel.setFont(font)
-      self.addWidget(rowLabel)
+      self.addWidget(self.createLabel(row, font))
+  def createLabel(self, text, font):
+    label = QLabel(text)
+    label.setWordWrap(False)
+    label.setFont(font)
+    return label
   def clear(self):
     while self.count() > 0:
       self.takeAt(0).deleteLater()
