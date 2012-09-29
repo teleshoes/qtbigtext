@@ -1,3 +1,7 @@
+qtbigtext (0.0.5) UNRELEASED; urgency=low
+  * Green on black
+ -- teleshoes <elliot.wolk@gmail.com>  Sat, 29 Sep 2012 00:40:26 +0100
+
 qtbigtext (0.0.4) UNRELEASED; urgency=low
   * Fixed oversize text bug, fixed missing last line bug
  -- teleshoes <elliot.wolk@gmail.com>  Fri, 28 Sep 2012 20:00:57 +0100
