@@ -10,24 +10,16 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 
 import os
+import re
 import sys
 import fcntl
 import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-BG_COLOR = "black"
-FG_COLOR = "white"
-css = "QWidget { background-color : %s; color : %s;}" % (
-  BG_COLOR, FG_COLOR)
+CONF = os.getenv("HOME") + '/.config/qtbigtext.conf'
 
-TYPEFACE= "Inconsolata"
-MIN_FONT_PT = 4
-MAX_FONT_PT = 600
-SCREEN_GEOMETRY_FORCE = None
-#SCREEN_GEOMETRY_FORCE = QRect(0, 0, 854, 480)
-
-sampleTextFile = "/home/user/MyDocs/qtbigtext.txt"
+sampleTextFile = os.getenv("HOME") + '/MyDocs/qtbigtext.txt'
 sampleText = ( ""
   + "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod "
   + "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
@@ -87,23 +79,60 @@ def main():
 
     if s == "":
       s = sampleText
-    app = QApplication([])
-    app.setStyleSheet(css)
 
-    qtBigText = QtBigText()
+    conf = Config().read()
+
+    app = QApplication([])
+    app.setStyleSheet("QWidget { background-color : %s; color : %s;}" % (
+      conf['bgColor'], conf['fgColor']))
+
+    qtBigText = QtBigText(conf)
     qtBigText.setText(s)
     
-    widget = QWidget()
-    widget.setLayout(qtBigText)
-    widget.showFullScreen()
+    qtBigText.showFullScreen()
     app.exec_()
 
-class QtBigText(QVBoxLayout):
-  def __init__(self):
-    QVBoxLayout.__init__(self)
+class Config():
+  def default(self):
+    return {
+      'bgColor': 'black',
+      'fgColor': 'green',
+      'typeface': 'Inconsolata',
+      'minFontPt': '4',
+      'maxFontPt': '600',
+      'forceWidth': '',
+      'forceHeight': ''}
+  def read(self):
+    conf = self.default()
+    try:
+      with open(CONF, 'r') as f:
+        for line in f:
+          m = re.search('\\s*([a-zA-Z]+)\\s*=\\s*(.*)', line)
+          if m != None and m.group(1) in conf:
+            conf[m.group(1)] = m.group(2)
+    except IOError:
+      self.write()
+    return conf
+  def write(self):
+    conf = self.default()
+    msg = ''
+    for k,v in sorted(conf.iteritems()):
+      msg += k + '=' + v + "\n"
+    with open(CONF, 'w') as f:
+      f.write(msg)
+
+class QtBigText(QWidget):
+  def __init__(self, conf):
+    QWidget.__init__(self)
+    self.conf = conf
+    self.layout = QVBoxLayout(self)
     self.geometry = QDesktopWidget().availableGeometry()
-    if SCREEN_GEOMETRY_FORCE != None:
-      self.geometry = SCREEN_GEOMETRY_FORCE
+    if len(self.conf['forceWidth']) > 0:
+      w = int(self.conf['forceWidth'])
+      self.geometry.setWidth(w)
+    if len(self.conf['forceHeight']) > 0:
+      h = int(self.conf['forceHeight'])
+      self.geometry.setHeight(h)
     self.setContentsMargins(0,0,0,0)
   def setText(self, text):
     self.clear()
@@ -120,15 +149,15 @@ class QtBigText(QVBoxLayout):
         sys.exit(1)
 
     for row in grid:
-      self.addWidget(self.createLabel(row, font))
+      self.layout.addWidget(self.createLabel(row, font))
   def createLabel(self, text, font):
     label = QLabel(text)
     label.setWordWrap(False)
     label.setFont(font)
     return label
   def clear(self):
-    while self.count() > 0:
-      self.takeAt(0).deleteLater()
+    while self.layout.count() > 0:
+      self.layout.takeAt(0).deleteLater()
   def screenWidth(self):
     return self.geometry.width()
   def screenHeight(self):
@@ -187,12 +216,12 @@ class QtBigText(QVBoxLayout):
   def textFits(self, text, font):
     return self.parseGrid(text, font) != None
   def constructFont(self, pointSize):
-    font = QFont(TYPEFACE, pointSize)
+    font = QFont(self.conf['typeface'], pointSize)
     font.setStyleStrategy(QFont.PreferAntialias)
     return font
   def selectPointSize(self, text):
-    minPt = MIN_FONT_PT
-    maxPt = MAX_FONT_PT
+    minPt = int(self.conf['minFontPt'])
+    maxPt = int(self.conf['maxFontPt'])
     midPt = (minPt + maxPt) / 2
     while minPt < midPt:
       font = self.constructFont(midPt)
