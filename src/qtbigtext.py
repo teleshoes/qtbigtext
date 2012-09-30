@@ -95,7 +95,7 @@ class Config():
   def default(self):
     return {
       'bgColor': 'black',
-      'fgColor': 'green',
+      'fgColor': 'white',
       'typeface': 'Inconsolata',
       'minFontPt': '4',
       'maxFontPt': '600',
