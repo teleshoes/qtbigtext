@@ -1,20 +1,7 @@
-This packages was debianized by:
+QTBigText
+    Copyright 2012 Elliot Wolk <elliot.wolk@gmail.com>
+    License: GPL v3 or later
 
-    Elliot Wolk <elliot.wolk@gmail.com> Wed Sep 12 16:22:37 EDT 2012
-
-Upstream Author(s):
-
-    Elliot Wolk <elliot.wolk@gmail.com> Wed Sep 12 16:22:37 EDT 2012
-
-Copyright:
-
-    Copyright 2012 Elliot Wolk
-
-License:
-
-    GPL v3 or later
-
-The Debian packaging is:
-
-    Copyright 2012 Elliot Wolk
-
+QTBigText icon:
+    Copyright 2012 flopjoke
+    License: Creative Commons Attribution-ShareAlike 3.0 Generic License
