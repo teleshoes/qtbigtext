@@ -19,7 +19,6 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 CONF = os.getenv("HOME") + '/.config/qtbigtext.conf'
 
-sampleTextFile = os.getenv("HOME") + '/MyDocs/qtbigtext.txt'
 sampleText = ("The quick brown fox jumped over the lazy dog.")
 
 name = sys.argv[0]
@@ -62,12 +61,12 @@ def main():
       s = readStdin()
     s = s.replace("\t", "    ")
 
+    conf = Config().read()
+
     if s == "":
-      s = readFile(sampleTextFile)
+      s = readFile(conf['textFile'])
     if s == "":
       s = sampleText
-
-    conf = Config().read()
 
     app = QApplication([])
     app.setStyleSheet("QWidget { background-color : %s; color : %s;}" % (
@@ -84,6 +83,7 @@ class Config():
     return {
       'bgColor': 'black',
       'fgColor': 'white',
+      'textFile': os.getenv("HOME") + '/MyDocs/qtbigtext.txt',
       'wordWrap': 'true',
       'typeface': 'Inconsolata',
       'minFontPt': '4',
