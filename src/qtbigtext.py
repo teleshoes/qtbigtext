@@ -76,7 +76,6 @@ def main():
 
     if s == "":
       s = readFile(sampleTextFile)
-
     if s == "":
       s = sampleText
 
