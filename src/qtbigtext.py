@@ -129,9 +129,11 @@ class QtBigText(QWidget):
     self.geometry = QDesktopWidget().availableGeometry()
     if len(self.conf['forceWidth']) > 0:
       w = int(self.conf['forceWidth'])
+      self.setFixedWidth(w)
       self.geometry.setWidth(w)
     if len(self.conf['forceHeight']) > 0:
       h = int(self.conf['forceHeight'])
+      self.setFixedHeight(h)
       self.geometry.setHeight(h)
     self.setContentsMargins(0,0,0,0)
   def setText(self, text):
