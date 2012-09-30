@@ -96,6 +96,7 @@ class Config():
     return {
       'bgColor': 'black',
       'fgColor': 'white',
+      'wordWrap': 'true',
       'typeface': 'Inconsolata',
       'minFontPt': '4',
       'maxFontPt': '600',
@@ -188,13 +189,16 @@ class QtBigText(QWidget):
     start = 0
     end = start + cols
     length = len(text)
+    isWordWrap = False
+    if self.conf['wordWrap'].lower() == "true":
+      isWordWrap = True
     for i in range(length):
       c = text[i]
       forceNew = False
       if c == "\n":
         end = i+1
         forceNew = True
-      elif c == " ":
+      elif isWordWrap and c == " ":
         end = i+1
 
       if i - start >= cols or forceNew:
