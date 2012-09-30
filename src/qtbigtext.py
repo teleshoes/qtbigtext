@@ -117,8 +117,11 @@ class Config():
     msg = ''
     for k,v in sorted(conf.iteritems()):
       msg += k + '=' + v + "\n"
-    with open(CONF, 'w') as f:
-      f.write(msg)
+    try:
+      with open(CONF, 'w') as f:
+        f.write(msg)
+    except IOError as e:
+      print >> sys.stderr, e
 
 class QtBigText(QWidget):
   def __init__(self, conf):
