@@ -1,3 +1,8 @@
+qtbigtext (0.2) UNRELEASED; urgency=low
+  * Config options: textFile, wordWrap
+  * flopjoke's beautiful cc-by-sa icon
+ -- teleshoes <elliot.wolk@gmail.com>  Sun, 30 Sep 2012 15:23:26 +0100
+
 qtbigtext (0.1) UNRELEASED; urgency=low
   * Added a config file.
  -- teleshoes <elliot.wolk@gmail.com>  Sun, 30 Sep 2012 04:27:31 +0100
