@@ -8,7 +8,9 @@
 
 from PySide.QtGui import *
 from PySide.QtCore import *
-
+from dbus.mainloop.glib import DBusGMainLoop
+import dbus
+import dbus.service
 import os
 import re
 import sys
@@ -74,8 +76,10 @@ def main():
 
     qtBigText = QtBigText(conf)
     qtBigText.setText(s)
-    
     qtBigText.showFullScreen()
+
+    DBusGMainLoop(set_as_default=True)
+    QtBigTextDbusService(qtBigText)
     app.exec_()
 
 class Config():
@@ -111,6 +115,17 @@ class Config():
         f.write(msg)
     except IOError as e:
       print >> sys.stderr, e
+
+class QtBigTextDbusService(dbus.service.Object):
+  def __init__(self, qtbigtext):
+    dbus.service.Object.__init__(self, self.getBusName(), '/')
+    self.qtbigtext = qtbigtext
+  def getBusName(self):
+    return dbus.service.BusName(
+      'org.teleshoes.qtbigtext', bus=dbus.SessionBus())
+  @dbus.service.method('org.teleshoes.qtbigtext')
+  def setText(self, text):
+    self.qtbigtext.setText(text)
 
 class QtBigText(QWidget):
   def __init__(self, conf):
