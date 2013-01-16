@@ -51,7 +51,6 @@ def readFile(path):
   except IOError:
     return ''
 
-
 def main():
   if len(sys.argv) == 2 and sys.argv[1] == '-h':
     print usage
@@ -165,7 +164,7 @@ class QtBigText(QWidget):
     return label
   def clear(self):
     while self.layout.count() > 0:
-      self.layout.takeAt(0).deleteLater()
+      self.layout.takeAt(0).widget().deleteLater()
   def screenWidth(self):
     return self.geometry.width()
   def screenHeight(self):
