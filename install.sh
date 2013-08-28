@@ -4,5 +4,6 @@ use warnings;
 
 my $dest = "/opt/qtbigtext";
 
-system "mkdir", $dest;
+system "rm", "-rf", $dest;
+system "mkdir", "-p", $dest;
 system "cp src/* $dest";
