@@ -15,7 +15,6 @@ sub main(@){
   if(@_ == 1 and $_[0] eq "-k"){
     killBigText();
   }elsif(@_ == 1 and -e $_[0]){
-    killBigText();
     my $file = shift;
     open FH, "< $file";
     my $contents = join '', <FH>;
@@ -37,21 +36,15 @@ sub python(){
   return $python;
 }
 
-sub isRunning(){
-  my $python = python;
-  system "pgrep", "-f", "$python $script";
-  return $? == 0;
-}
-
 sub killBigText(){
   system "pkill", "-f", $script;
 }
 
 sub setBigText($){
   my $str = shift;
-  if(isRunning()){
-    system "qdbus", "org.teleshoes.qtbigtext", "/", "setText", $str;
-  }else{
+  system "qdbus", "org.teleshoes.qtbigtext", "/", "setText", $str;
+  if($? != 0){
+    killBigText();
     my $python = python;
     if(not fork){
       open FH, "| $python $script";
