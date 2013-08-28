@@ -10,6 +10,8 @@ sub killBigText();
 sub setBigText($);
 
 sub main(@){
+  close STDOUT;
+  close STDERR;
   if(@_ == 1 and $_[0] eq "-k"){
     killBigText();
   }elsif(@_ == 1 and -e $_[0]){
@@ -36,7 +38,8 @@ sub python(){
 }
 
 sub isRunning(){
-  system "pgrep", "-f", $script;
+  my $python = python;
+  system "pgrep", "-f", "$python $script";
   return $? == 0;
 }
 
@@ -50,9 +53,11 @@ sub setBigText($){
     system "qdbus", "org.teleshoes.qtbigtext", "/", "setText", $str;
   }else{
     my $python = python;
-    open FH, "| $python $script";
-    print FH $str;
-    close FH;
+    if(not fork){
+      open FH, "| $python $script";
+      print FH $str;
+      close FH;
+    }
   }
 }
 
