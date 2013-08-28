@@ -7,6 +7,6 @@ Standards-Version: 3.8.4
 
 Package: qtbigtext
 Architecture: any
-Depends: python, python-pyside.qtgui, python-pyside.qtcore
+Depends: python, python-pyside.qtgui, python-pyside.qtcore, python-dbus
 Description: QT Big Text Viewer
  Calculates the maximum font point size that will fit all the text, fullscreen, and does so.
