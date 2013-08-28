@@ -39,7 +39,10 @@ def readStdin():
   sBuf = ''
   while True:
     try:
-      s = os.read(fd, 512)
+      if sys.version_info[0] >= 3:
+        s = os.read(fd, 512).decode('utf8')
+      else:
+        s = unicode(os.read(fd, 512), 'utf8')
     except:
       s = ''
     sBuf += s
