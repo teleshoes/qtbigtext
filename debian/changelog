@@ -1,3 +1,8 @@
+qtbigtext (0.3) UNRELEASED; urgency=low
+  * python3 compatibility
+  * included better CLI /usr/bin/bigtext
+ -- teleshoes <elliot.wolk@gmail.com>  Wed, 28 Aug 2013 03:55:04 -0500
+
 qtbigtext (0.2) UNRELEASED; urgency=low
   * Config options: textFile, wordWrap
   * flopjoke's beautiful cc-by-sa icon
