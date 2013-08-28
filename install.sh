@@ -2,8 +2,10 @@
 use strict;
 use warnings;
 
-my $dest = "/opt/qtbigtext";
+my $binDest = "/usr/bin";
+my $libDest = "/opt/qtbigtext";
 
-system "rm", "-rf", $dest;
-system "mkdir", "-p", $dest;
-system "cp src/* $dest";
+system "rm", "-rf", $libDest;
+system "mkdir", "-p", $libDest;
+system "cp", "src/bigtext", $binDest;
+system "cp", "src/qtbigtext.py", $libDest;
