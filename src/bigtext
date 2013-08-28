@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $script = "/opt/qtbigtext/qtbigtext.py";
+
+sub python();
+sub isRunning();
+sub killBigText();
+sub setBigText($);
+
+sub main(@){
+  if(@_ == 1 and $_[0] eq "-k"){
+    killBigText();
+  }elsif(@_ == 1 and -e $_[0]){
+    killBigText();
+    my $file = shift;
+    open FH, "< $file";
+    my $contents = join '', <FH>;
+    close FH;
+    setBigText $contents;
+  }else{
+    setBigText "@_";
+  }
+}
+
+sub python(){
+  my $python = '';
+  $python = `which python3   2>/dev/null` if $python !~ /python/;
+  $python = `which python2.7 2>/dev/null` if $python !~ /python/;
+  $python = `which python2.6 2>/dev/null` if $python !~ /python/;
+  $python = `which python2   2>/dev/null` if $python !~ /python/;
+  $python = `which python    2>/dev/null` if $python !~ /python/;
+  chomp $python;
+  return $python;
+}
+
+sub isRunning(){
+  system "pgrep", "-f", $script;
+  return $? == 0;
+}
+
+sub killBigText(){
+  system "pkill", "-f", $script;
+}
+
+sub setBigText($){
+  my $str = shift;
+  if(isRunning()){
+    system "qdbus", "org.teleshoes.qtbigtext", "/", "setText", $str;
+  }else{
+    my $python = python;
+    open FH, "| $python $script";
+    print FH $str;
+    close FH;
+  }
+}
+
+&main(@ARGV);
