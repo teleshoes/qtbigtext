@@ -29,6 +29,9 @@ usage = ("Usage:\n"
   + "  " + name + " -h  show this message\n"
 )
 
+def printErr(msg):
+  sys.stderr.write(msg)
+
 def readStdin():
   fd = sys.stdin.fileno()
   fl = fcntl.fcntl(fd, fcntl.F_GETFL)
@@ -53,7 +56,7 @@ def readFile(path):
 
 def main():
   if len(sys.argv) == 2 and sys.argv[1] == '-h':
-    print usage
+    print(usage)
     return 0
   else:
     if len(sys.argv) > 1:
@@ -113,7 +116,7 @@ class Config():
       with open(CONF, 'w') as f:
         f.write(msg)
     except IOError as e:
-      print >> sys.stderr, e
+      printErr(e)
 
 class QtBigTextDbusService(dbus.service.Object):
   def __init__(self, qtbigtext):
@@ -147,12 +150,12 @@ class QtBigText(QWidget):
     grid = self.parseGrid(text, font)
 
     if grid == None:
-      print >>sys.stderr, 'text too big'
+      printErr("text too big\n")
       text = "!"
       font = self.constructFont(self.selectPointSize(text))
       grid = self.parseGrid(text, font)
       if grid == None:
-        print >>sys.stderr, 'failure: could not fit one character on screen'
+        printErr("failure: could not fit one character on screen\n")
         sys.exit(1)
 
     for row in grid:
