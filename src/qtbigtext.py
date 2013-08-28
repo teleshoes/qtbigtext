@@ -107,7 +107,7 @@ class Config():
   def write(self):
     conf = self.default()
     msg = ''
-    for k,v in sorted(conf.iteritems()):
+    for k,v in sorted(conf.items()):
       msg += k + '=' + v + "\n"
     try:
       with open(CONF, 'w') as f:
