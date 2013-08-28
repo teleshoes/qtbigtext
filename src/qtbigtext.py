@@ -215,7 +215,7 @@ class QtBigText(QWidget):
         lines += text[start:].split("\n")
         break
 
-    lines = map (lambda x: x.replace('\n', ''), lines)
+    lines = [x.replace('\n', '') for x in lines]
 
     #remove empty trailing lines
     while len(lines) > 0 and lines[-1] == "":
