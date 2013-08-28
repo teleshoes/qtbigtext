@@ -176,8 +176,8 @@ class QtBigText(QWidget):
     fm = QFontMetrics(font)
     w = fm.width('W')
     h = fm.height()
-    rows = self.screenHeight() / h
-    cols = self.screenWidth() / w
+    rows = int(self.screenHeight() / h)
+    cols = int(self.screenWidth() / w)
     return (rows, cols)
   def parseGrid(self, text, font):
     rows, cols = self.calculateGrid(font)
