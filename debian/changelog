@@ -1,3 +1,7 @@
+qtbigtext (0.3.2) UNRELEASED; urgency=low
+  * remove pgrep check for running and just rely on qdbus
+ -- teleshoes <elliot.wolk@gmail.com>  Wed, 28 Aug 2013 04:45:00 -0500
+
 qtbigtext (0.3.1) UNRELEASED; urgency=low
   * make /usr/bin/bigtext silent and return to terminal immediately
  -- teleshoes <elliot.wolk@gmail.com>  Wed, 28 Aug 2013 04:18:59 -0500
