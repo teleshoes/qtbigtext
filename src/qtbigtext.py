@@ -224,7 +224,7 @@ class QtBigText(QWidget):
     return lines
 
   def splitAt(self, s, n):
-    for i in xrange(0, len(s), n):
+    for i in range(0, len(s), n):
       yield s[i:i+n]
   def textFits(self, text, font):
     return self.parseGrid(text, font) != None
