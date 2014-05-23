@@ -170,7 +170,9 @@ class QtBigText(QWidget):
     return label
   def clear(self):
     while self.layout.count() > 0:
-      self.layout.takeAt(0).widget().deleteLater()
+      w = self.layout.takeAt(0).widget()
+      w.setParent(None)
+      w.deleteLater()
   def screenWidth(self):
     return self.geometry.width()
   def screenHeight(self):
