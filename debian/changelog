@@ -1,3 +1,7 @@
+qtbigtext (0.3.3) UNRELEASED; urgency=low
+  * fix leftover artifacts between runs
+ -- teleshoes <elliot.wolk@gmail.com>  Thu, 22 May 2014 23:52:54 -0500
+
 qtbigtext (0.3.2) UNRELEASED; urgency=low
   * remove pgrep check for running and just rely on qdbus
  -- teleshoes <elliot.wolk@gmail.com>  Wed, 28 Aug 2013 04:45:00 -0500
