@@ -256,7 +256,9 @@ class QtBigText(QWidget):
   def textFits(self, text, font):
     return self.parseGrid(text, font) != None
   def constructFont(self, pointSize):
-    font = QFont(self.conf['typeface'], pointSize)
+    font = QFont()
+    font.setFamily(self.conf['typeface'])
+    font.setPointSizeF(pointSize)
     font.setStyleStrategy(QFont.PreferAntialias)
     return font
   def selectPointSize(self, text):
