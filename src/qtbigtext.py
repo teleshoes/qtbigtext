@@ -9,6 +9,7 @@
 from PySide.QtGui import *
 from PySide.QtCore import *
 from dbus.mainloop.glib import DBusGMainLoop
+from enum import Enum
 import dbus
 import dbus.service
 import os
@@ -20,6 +21,10 @@ import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 CONF = os.getenv("HOME") + '/.config/qtbigtext.conf'
+
+class LineType(Enum):
+  normal = 1
+  separator = 2
 
 sampleText = ("The quick brown fox jumped over the lazy dog.")
 
@@ -90,6 +95,7 @@ def main():
 class Config():
   def default(self):
     return {
+      'lineSeparator': 'false',
       'bgColor': 'black',
       'fgColor': 'white',
       'textFile': os.getenv("HOME") + '/MyDocs/qtbigtext.txt',
@@ -162,12 +168,19 @@ class QtBigText(QWidget):
         sys.exit(1)
 
     for row in grid:
-      self.layout.addWidget(self.createLabel(row, font))
+      [line, lineType] = row
+      self.layout.addWidget(self.createLabel(line, font))
+      if lineType == LineType.separator:
+        self.layout.addWidget(self.createSeparator())
   def createLabel(self, text, font):
     label = QLabel(text)
     label.setWordWrap(False)
     label.setFont(font)
     return label
+  def createSeparator(self):
+    sep = QFrame()
+    sep.setFrameShape(QFrame.HLine)
+    return sep
   def clear(self):
     while self.layout.count() > 0:
       w = self.layout.takeAt(0).widget()
@@ -195,39 +208,48 @@ class QtBigText(QWidget):
       else:
         return grid
   def wordWrap(self, text, cols):
-    lines = []
+    rows = []
     start = 0
     end = start + cols
     length = len(text)
-    isWordWrap = False
-    if self.conf['wordWrap'].lower() == "true":
-      isWordWrap = True
+    isWordWrap = self.conf['wordWrap'].lower() == "true"
+    isLineSeparator = self.conf['lineSeparator'].lower() == "true"
     for i in range(length):
       c = text[i]
-      forceNew = False
+      lineBreak = False
       if c == "\n":
         end = i+1
-        forceNew = True
+        lineBreak = True
       elif isWordWrap and c == " ":
         end = i+1
 
-      if i - start >= cols or forceNew:
-        lines.append(text[start:end])
+      if i - start >= cols or lineBreak:
+        line = text[start:end]
+        rows.append(self.getRow(line, lineBreak, isLineSeparator))
         start = end
         end = start + cols
 
       if start+cols >= length:
-        lines += text[start:].split("\n")
+        for line in text[start:].split("\n"):
+          rows.append(self.getRow(line, True, isLineSeparator))
         break
 
-    lines = [x.replace('\n', '') for x in lines]
-
     #remove empty trailing lines
-    while len(lines) > 0 and lines[-1] == "":
-      del lines[-1]
+    while len(rows) > 0 and rows[-1][0] == "":
+      del rows[-1]
 
-    return lines
+    #remove separator from last line
+    if len(rows) > 0:
+      rows[-1][1] = LineType.normal
 
+    return rows
+  def getRow(self, text, isLineBreak, isLineSeparator):
+    if isLineBreak and isLineSeparator:
+      lineType = LineType.separator
+    else:
+      lineType = LineType.normal
+    text = text.replace('\n', '')
+    return [text, lineType]
   def splitAt(self, s, n):
     for i in range(0, len(s), n):
       yield s[i:i+n]
