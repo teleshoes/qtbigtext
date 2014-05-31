@@ -285,6 +285,12 @@ class QtBigText(QWidget):
     if self.guessFontPtIndex != None:
       midIndex = self.guessFontPtIndex
 
+      #check guess index to see if its exactly correct
+      if self.testIndex(text, midIndex):
+        minIndex = midIndex
+        if not self.testIndex(text, midIndex+1):
+          maxIndex = midIndex
+        midIndex = int((minIndex+maxIndex)/2)
     else:
       midIndex = int((minIndex+maxIndex)/2)
 
@@ -296,7 +302,8 @@ class QtBigText(QWidget):
       midIndex = int((minIndex + maxIndex) / 2)
 
     self.guessFontPtIndex = midIndex
-    return self.fontDecaPts[midIndex]/10
+    fontPt = self.fontDecaPts[midIndex]/10
+    return fontPt
 
 if __name__ == "__main__":
   sys.exit(main())
