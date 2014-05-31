@@ -162,6 +162,7 @@ class QtBigText(QWidget):
     while decaPt < maxPt*10:
       self.fontDecaPts.append(decaPt)
       decaPt += 1
+    self.guessFontPtIndex = None
   def setText(self, text):
     self.clear()
     font = self.constructFont(self.selectPointSize(text))
@@ -281,7 +282,11 @@ class QtBigText(QWidget):
     minIndex = 0
     maxIndex = len(self.fontDecaPts)
 
-    midIndex = int((minIndex+maxIndex)/2)
+    if self.guessFontPtIndex != None:
+      midIndex = self.guessFontPtIndex
+
+    else:
+      midIndex = int((minIndex+maxIndex)/2)
 
     while minIndex < midIndex:
       if self.testIndex(text, midIndex):
@@ -290,6 +295,7 @@ class QtBigText(QWidget):
         maxIndex = midIndex-1
       midIndex = int((minIndex + maxIndex) / 2)
 
+    self.guessFontPtIndex = midIndex
     return self.fontDecaPts[midIndex]/10
 
 if __name__ == "__main__":
