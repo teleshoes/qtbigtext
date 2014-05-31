@@ -9,7 +9,6 @@
 from PySide.QtGui import *
 from PySide.QtCore import *
 from dbus.mainloop.glib import DBusGMainLoop
-from enum import Enum
 import dbus
 import dbus.service
 import os
@@ -22,7 +21,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 CONF = os.getenv("HOME") + '/.config/qtbigtext.conf'
 
-class LineType(Enum):
+class LineType:
   normal = 1
   separator = 2
 
