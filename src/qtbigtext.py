@@ -153,6 +153,15 @@ class QtBigText(QWidget):
       self.setFixedHeight(h)
       self.geometry.setHeight(h)
     self.setContentsMargins(0,0,0,0)
+
+    minPt = int(self.conf['minFontPt'])
+    maxPt = int(self.conf['maxFontPt'])
+
+    self.fontDecaPts = []
+    decaPt = minPt*10
+    while decaPt < maxPt*10:
+      self.fontDecaPts.append(decaPt)
+      decaPt += 1
   def setText(self, text):
     self.clear()
     font = self.constructFont(self.selectPointSize(text))
@@ -261,18 +270,27 @@ class QtBigText(QWidget):
     font.setPointSizeF(pointSize)
     font.setStyleStrategy(QFont.PreferAntialias)
     return font
+  def testIndex(self, text, decaFontPtIndex):
+    if decaFontPtIndex < 0:
+      return True
+    if decaFontPtIndex >= len(self.fontDecaPts):
+      return False
+    font = self.constructFont(self.fontDecaPts[decaFontPtIndex]/10)
+    return self.textFits(text, font)
   def selectPointSize(self, text):
-    minPt = int(self.conf['minFontPt'])
-    maxPt = int(self.conf['maxFontPt'])
-    midPt = (minPt + maxPt) / 2
-    while minPt < midPt:
-      font = self.constructFont(midPt)
-      if self.textFits(text, font):
-        minPt = midPt
+    minIndex = 0
+    maxIndex = len(self.fontDecaPts)
+
+    midIndex = int((minIndex+maxIndex)/2)
+
+    while minIndex < midIndex:
+      if self.testIndex(text, midIndex):
+        minIndex = midIndex
       else:
-        maxPt = midPt-1
-      midPt = (minPt + maxPt) / 2
-    return midPt
+        maxIndex = midIndex-1
+      midIndex = int((minIndex + maxIndex) / 2)
+
+    return self.fontDecaPts[midIndex]/10
 
 if __name__ == "__main__":
   sys.exit(main())
