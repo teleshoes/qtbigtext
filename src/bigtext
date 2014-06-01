@@ -11,33 +11,43 @@ sub python();
 sub killBigText();
 sub isRunning();
 sub dbusCall($);
-sub setBigText($);
+sub setBigText($$);
 
 my $usage = "Usage:
   $0 -h|--help
      Show this message
 
-  $0 -k
+  $0 [OPTS] -k
      Kill qtbigtext
 
-  $0 --stdin
+  $0 [OPTS] --stdin
      Read lines from stdin, backslash interpolate them,
        and call qtbigtext for each parsed line
 
-  $0 FILE_NAME
+  $0 [OPTS] FILE_NAME
      Read FILE_NAME and call qtbigtext with the contents
 
-  $0 [TEXT TEXT ...]
+  $0 [OPTS] [TEXT TEXT ...]
      Call qtbigtxt with \"TEXT TEXT ...\"
 
   qtbigtext is called with dbus-send if its running,
     or invoked directly otherwise.
+
+  OPTS are --KEY=VAL {VAL can be empty}, and are passed into qtbigtext
+    only when invoked directly.
 ";
 
 sub main(@){
   die $usage if @_ == 1 and $_[0] =~ /^(-h|--help)$/;
+
+  my $opts = [];
+  while(@_ > 0 and $_[0] =~ /^--[a-zA-Z0-9_\-]+=.*$/){
+    push @$opts, shift;
+  }
+
   my $cmd = '';
   $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--stdin)$/;
+
   if($cmd eq "-k"){
     die $usage if @_ > 0;
     killBigText();
@@ -54,16 +64,16 @@ sub main(@){
         "r" => "",
       );
       $str =~ s/\\([\\tn])/$backslashReplace{$1}/g;
-      setBigText $str if $str ne "";
+      setBigText $str, $opts if $str ne "";
     }
   }elsif(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
     my $file = shift;
     open FH, "< $file";
     my $contents = join '', <FH>;
     close FH;
-    setBigText $contents;
+    setBigText $contents, $opts;
   }else{
-    setBigText "@_";
+    setBigText "@_", $opts;
   }
 }
 
@@ -102,8 +112,9 @@ sub dbusCall($){
   return $? == 0;
 }
 
-sub setBigText($){
+sub setBigText($$){
   my $str = shift;
+  my $opts = shift;
 
   my $dbusOk = 0;
   if(isRunning()){
@@ -132,7 +143,7 @@ sub setBigText($){
     if(not fork){
       close STDOUT;
       close STDERR;
-      open FH, "| $python $script";
+      open FH, "| $python $script @$opts";
       print FH $str;
       close FH;
     }
