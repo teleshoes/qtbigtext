@@ -39,7 +39,8 @@ sub python(){
 }
 
 sub killBigText(){
-  system "pkill", "-f", $script;
+  my $python = python();
+  system "pkill", "-f", "^$python.*$script";
 }
 
 sub isRunning(){
