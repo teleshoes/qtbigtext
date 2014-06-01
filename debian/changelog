@@ -1,3 +1,12 @@
+qtbigtext (0.4) UNRELEASED; urgency=low
+  * add command line args to override config settings
+  * add command line arg to bigtext to read from STDIN
+  * add optional visual separator for manual line breaks
+  * fix font calculation to be consistent to tenths of a point
+  * fix bug where rapid invokations of bigtext failed to start it
+  * re-try the previous font point size when setting text with dbus
+ -- teleshoes <elliot.wolk@gmail.com>  Sun, 01 Jun 2014 04:59:47 -0500
+
 qtbigtext (0.3.3) UNRELEASED; urgency=low
   * fix leftover artifacts between runs
  -- teleshoes <elliot.wolk@gmail.com>  Thu, 22 May 2014 23:52:54 -0500
