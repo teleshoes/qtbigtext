@@ -41,8 +41,13 @@ sampleText = ("The quick brown fox jumped over the lazy dog.")
 
 name = sys.argv[0]
 usage = ("Usage:\n"
-  + "  " + name + " TEXT [TEXT .. TEXT]  show 'TEXT TEXT ..'\n"
+  + "  [OPTS]" + name + " TEXT [TEXT .. TEXT]  show 'TEXT TEXT ..'\n"
   + "  " + name + " -h  show this message\n"
+  + "\n"
+  + "  OPTS are --KEY=VAL {VAL can be empty}, and override config file:\n"
+  + "    " + CONF + "\n"
+  + "  default values are as follows:\n"
+  + '\n'.join("    --"+k+"="+v for k, v in DEFAULT_CONFIG.items())
 )
 
 def printErr(msg):
@@ -78,15 +83,21 @@ def main():
     print(usage)
     return 0
   else:
-    if len(sys.argv) > 1:
-      s = ' '.join(sys.argv[1:])
+    config = Config()
+    config.read()
+    args = sys.argv[1:]
+    while len(args) > 0 and args[0].startswith('--'):
+      arg = args.pop(0)
+      arg = re.sub("^--", "", arg)
+      config.update(arg)
+
+    conf = config.get()
+
+    if len(args) > 0:
+      s = ' '.join(args)
     else:
       s = readStdin()
     s = s.replace("\t", "    ")
-
-    config = Config()
-    config.read()
-    conf = config.get()
 
     if s == "":
       s = readFile(conf['textFile'])
