@@ -16,7 +16,7 @@ sub setBigText($);
 sub main(@){
   if(@_ == 1 and $_[0] eq "-k"){
     killBigText();
-  }elsif(@_ == 1 and -e $_[0]){
+  }elsif(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
     my $file = shift;
     open FH, "< $file";
     my $contents = join '', <FH>;
