@@ -45,11 +45,11 @@ sub setBigText($){
   my $dest = "org.teleshoes.qtbigtext";
   my $path = "/";
   my $method = "setText";
-  system "qdbus",
-    $dest,
+  system "dbus-send", "--session", "--print-reply", "--type=method_call",
+    "--dest=$dest",
     $path,
-    $method,
-    $str;
+    "$dest.$method",
+    "string:$str";
   if($? != 0){
     killBigText();
     my $python = python;
