@@ -20,6 +20,18 @@ import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 CONF = os.getenv("HOME") + '/.config/qtbigtext.conf'
+DEFAULT_CONFIG = {
+  'lineSeparator': 'false',
+  'bgColor': 'black',
+  'fgColor': 'white',
+  'textFile': os.getenv("HOME") + '/MyDocs/qtbigtext.txt',
+  'wordWrap': 'true',
+  'typeface': 'Inconsolata',
+  'minFontPt': '4',
+  'maxFontPt': '600',
+  'forceWidth': '',
+  'forceHeight': ''
+}
 
 class LineType:
   normal = 1
@@ -72,7 +84,9 @@ def main():
       s = readStdin()
     s = s.replace("\t", "    ")
 
-    conf = Config().read()
+    config = Config()
+    config.read()
+    conf = config.get()
 
     if s == "":
       s = readFile(conf['textFile'])
@@ -92,31 +106,28 @@ def main():
     app.exec_()
 
 class Config():
+  def __init__(self):
+    self.default()
   def default(self):
-    return {
-      'lineSeparator': 'false',
-      'bgColor': 'black',
-      'fgColor': 'white',
-      'textFile': os.getenv("HOME") + '/MyDocs/qtbigtext.txt',
-      'wordWrap': 'true',
-      'typeface': 'Inconsolata',
-      'minFontPt': '4',
-      'maxFontPt': '600',
-      'forceWidth': '',
-      'forceHeight': ''}
+    self.conf = DEFAULT_CONFIG.copy()
+  def get(self):
+    return self.conf
   def read(self):
-    conf = self.default()
     try:
       with open(CONF, 'r') as f:
         for line in f:
-          m = re.search('\\s*([a-zA-Z]+)\\s*=\\s*(.*)', line)
-          if m != None and m.group(1) in conf:
-            conf[m.group(1)] = m.group(2)
+          self.update(line)
     except IOError:
+      self.default()
       self.write()
-    return conf
+  def update(self, entry):
+    m = re.search('\\s*([a-zA-Z]+)\\s*=\\s*(.*)', entry)
+    if m != None:
+      k = m.group(1)
+      v = m.group(2)
+      if k in self.conf:
+        self.conf[k] = v
   def write(self):
-    conf = self.default()
     msg = ''
     for k,v in sorted(conf.items()):
       msg += k + '=' + v + "\n"
