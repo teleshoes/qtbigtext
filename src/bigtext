@@ -10,8 +10,6 @@ sub killBigText();
 sub setBigText($);
 
 sub main(@){
-  close STDOUT;
-  close STDERR;
   if(@_ == 1 and $_[0] eq "-k"){
     killBigText();
   }elsif(@_ == 1 and -e $_[0]){
@@ -54,6 +52,8 @@ sub setBigText($){
     killBigText();
     my $python = python;
     if(not fork){
+      close STDOUT;
+      close STDERR;
       open FH, "| $python $script";
       print FH $str;
       close FH;
