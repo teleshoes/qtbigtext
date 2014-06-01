@@ -138,6 +138,8 @@ class Config():
       v = m.group(2)
       if k in self.conf:
         self.conf[k] = v
+      else:
+        printErr("Malformed or unknown option: " + k + "=" + v)
   def write(self):
     msg = ''
     for k,v in sorted(conf.items()):
