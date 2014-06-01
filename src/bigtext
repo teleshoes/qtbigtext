@@ -42,7 +42,14 @@ sub killBigText(){
 
 sub setBigText($){
   my $str = shift;
-  system "qdbus", "org.teleshoes.qtbigtext", "/", "setText", $str;
+  my $dest = "org.teleshoes.qtbigtext";
+  my $path = "/";
+  my $method = "setText";
+  system "qdbus",
+    $dest,
+    $path,
+    $method,
+    $str;
   if($? != 0){
     killBigText();
     my $python = python;
