@@ -4,6 +4,9 @@ use warnings;
 
 my $script = "/opt/qtbigtext/qtbigtext.py";
 
+my $dbusRetries = 10;
+my $retryDelay = 1;
+
 sub python();
 sub killBigText();
 sub isRunning();
@@ -64,6 +67,15 @@ sub setBigText($){
   my $dbusOk = 0;
   if(isRunning()){
     $dbusOk = dbusCall $str;
+
+    if(not $dbusOk){
+      my $retries = $dbusRetries;
+      while(not $dbusOk and $retries > 0 and isRunning()){
+        sleep $retryDelay;
+        $dbusOk = dbusCall $str;
+        $retries--;
+      }
+    }
   }
 
   if(not $dbusOk){
