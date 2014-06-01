@@ -66,20 +66,27 @@ sub setBigText($){
 
   my $dbusOk = 0;
   if(isRunning()){
+    print "$script is running, calling dbus\n";
     $dbusOk = dbusCall $str;
 
     if(not $dbusOk){
       my $retries = $dbusRetries;
+      print "dbus call failed, retrying\n";
       while(not $dbusOk and $retries > 0 and isRunning()){
+        print "waiting ${retryDelay}s and retrying {$retries retries left}\n";
         sleep $retryDelay;
         $dbusOk = dbusCall $str;
         $retries--;
       }
     }
+
+    print "dbus call failed, killing and rerunning $script\n" if not $dbusOk;
   }
 
   if(not $dbusOk){
+    print "killing $script\n";
     killBigText();
+    print "(re)running $script\n";
     my $python = python;
     if(not fork){
       close STDOUT;
