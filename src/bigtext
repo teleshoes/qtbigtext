@@ -21,6 +21,13 @@ sub main(@){
     while($line = <STDIN>){
       my $str = $line;
       chomp $str;
+      my %backslashReplace = (
+        "\\" => "\\",
+        "t" => "\t",
+        "n" => "\n",
+        "r" => "",
+      );
+      $str =~ s/\\([\\tn])/$backslashReplace{$1}/g;
       setBigText $str if $str ne "";
     }
   }elsif(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
