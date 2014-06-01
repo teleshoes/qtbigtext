@@ -44,7 +44,7 @@ sub killBigText(){
 
 sub isRunning(){
   my $python = python();
-  system "pkill", "-0", "-f", "-x", "$python $script";
+  system "pkill", "-0", "-f", "^$python.*$script";
   return $? == 0;
 }
 
