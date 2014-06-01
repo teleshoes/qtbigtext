@@ -34,7 +34,7 @@ usage = ("Usage:\n"
 )
 
 def printErr(msg):
-  sys.stderr.write(msg)
+  sys.stderr.write(msg + "\n")
 
 def readStdin():
   fd = sys.stdin.fileno()
