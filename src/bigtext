@@ -5,8 +5,9 @@ use warnings;
 my $script = "/opt/qtbigtext/qtbigtext.py";
 
 sub python();
-sub isRunning();
 sub killBigText();
+sub isRunning();
+sub dbusCall($);
 sub setBigText($);
 
 sub main(@){
@@ -38,7 +39,13 @@ sub killBigText(){
   system "pkill", "-f", $script;
 }
 
-sub setBigText($){
+sub isRunning(){
+  my $python = python();
+  system "pkill", "-0", "-f", "-x", "$python $script";
+  return $? == 0;
+}
+
+sub dbusCall($){
   my $str = shift;
   my $dest = "org.teleshoes.qtbigtext";
   my $path = "/";
@@ -48,7 +55,18 @@ sub setBigText($){
     $path,
     "$dest.$method",
     "string:$str";
-  if($? != 0){
+  return $? == 0;
+}
+
+sub setBigText($){
+  my $str = shift;
+
+  my $dbusOk = 0;
+  if(isRunning()){
+    $dbusOk = dbusCall $str;
+  }
+
+  if(not $dbusOk){
     killBigText();
     my $python = python;
     if(not fork){
