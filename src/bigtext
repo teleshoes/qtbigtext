@@ -13,10 +13,36 @@ sub isRunning();
 sub dbusCall($);
 sub setBigText($);
 
+my $usage = "Usage:
+  $0 -h|--help
+     Show this message
+
+  $0 -k
+     Kill qtbigtext
+
+  $0 --stdin
+     Read lines from stdin, backslash interpolate them,
+       and call qtbigtext for each parsed line
+
+  $0 FILE_NAME
+     Read FILE_NAME and call qtbigtext with the contents
+
+  $0 [TEXT TEXT ...]
+     Call qtbigtxt with \"TEXT TEXT ...\"
+
+  qtbigtext is called with dbus-send if its running,
+    or invoked directly otherwise.
+";
+
 sub main(@){
-  if(@_ == 1 and $_[0] eq "-k"){
+  die $usage if @_ == 1 and $_[0] =~ /^(-h|--help)$/;
+  my $cmd = '';
+  $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--stdin)$/;
+  if($cmd eq "-k"){
+    die $usage if @_ > 0;
     killBigText();
-  }elsif(@_ == 1 and $_[0] eq "--stdin"){
+  }elsif($cmd eq "--stdin"){
+    die $usage if @_ > 0;
     my $line;
     while($line = <STDIN>){
       my $str = $line;
