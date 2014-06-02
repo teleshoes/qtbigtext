@@ -139,10 +139,10 @@ sub setBigText($$){
     print "killing $script\n";
     killBigText();
     print "(re)running $script\n";
+    close STDOUT;
+    close STDERR;
     my $python = python;
     if(not fork){
-      close STDOUT;
-      close STDERR;
       open FH, "| $python $script @$opts";
       print FH $str;
       close FH;
