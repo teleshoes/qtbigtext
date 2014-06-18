@@ -30,7 +30,8 @@ DEFAULT_CONFIG = {
   'minFontPt': '4',
   'maxFontPt': '600',
   'forceWidth': '',
-  'forceHeight': ''
+  'forceHeight': '',
+  'align': 'left',
 }
 
 class LineType:
@@ -209,7 +210,20 @@ class QtBigText(QWidget):
     label = QLabel(text)
     label.setWordWrap(False)
     label.setFont(font)
+    style = self.getAlignStyle()
+    if style != None:
+      label.setStyleSheet(style)
     return label
+  def getAlignStyle(self):
+    align = self.conf['align'].lower()
+    if align == 'left':
+      return 'qproperty-alignment: AlignLeft;'
+    elif align == 'center':
+      return 'qproperty-alignment: AlignCenter;'
+    elif align == 'right':
+      return 'qproperty-alignment: AlignRight;'
+    else:
+      return None
   def createSeparator(self):
     sep = QFrame()
     sep.setFrameShape(QFrame.HLine)
