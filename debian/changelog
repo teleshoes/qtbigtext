@@ -1,3 +1,8 @@
+qtbigtext (0.4.1) UNRELEASED; urgency=low
+  * add 'align' config
+  * bug fixes
+ -- teleshoes <elliot.wolk@gmail.com>  Thu, 04 Sep 2014 17:39:21 -0500
+
 qtbigtext (0.4) UNRELEASED; urgency=low
   * add command line args to override config settings
   * add command line arg to bigtext to read from STDIN
