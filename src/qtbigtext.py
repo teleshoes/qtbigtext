@@ -143,7 +143,7 @@ class Config():
         printErr("Malformed or unknown option: " + k + "=" + v)
   def write(self):
     msg = ''
-    for k,v in sorted(conf.items()):
+    for k,v in sorted(self.conf.items()):
       msg += k + '=' + v + "\n"
     try:
       with open(CONF, 'w') as f:
