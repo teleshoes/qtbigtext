@@ -4,6 +4,7 @@ use warnings;
 
 my $script = "/opt/qtbigtext/qtbigtext.py";
 
+my $dbusTimeoutMillis = 1000;
 my $dbusRetries = 10;
 my $retryDelay = 1;
 
@@ -104,11 +105,17 @@ sub dbusCall($){
   my $dest = "org.teleshoes.qtbigtext";
   my $path = "/";
   my $method = "setText";
-  system "dbus-send", "--session", "--print-reply", "--type=method_call",
+  my @cmd = ("dbus-send",
+    "--session",
+    "--print-reply",
+    "--type=method_call",
+    "--reply-timeout=$dbusTimeoutMillis",
     "--dest=$dest",
     $path,
     "$dest.$method",
-    "string:$str";
+    "string:$str",
+  );
+  system @cmd;
   return $? == 0;
 }
 
