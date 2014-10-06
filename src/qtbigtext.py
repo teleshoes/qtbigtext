@@ -16,6 +16,7 @@ import re
 import sys
 import fcntl
 import signal
+import threading
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -155,12 +156,17 @@ class QtBigTextDbusService(dbus.service.Object):
   def __init__(self, qtbigtext):
     dbus.service.Object.__init__(self, self.getBusName(), '/')
     self.qtbigtext = qtbigtext
+    self.lock = threading.Lock()
   def getBusName(self):
     return dbus.service.BusName(
       'org.teleshoes.qtbigtext', bus=dbus.SessionBus())
   @dbus.service.method('org.teleshoes.qtbigtext')
   def setText(self, text):
-    self.qtbigtext.setText(text)
+    self.lock.acquire()
+    try:
+      self.qtbigtext.setText(text)
+    finally:
+      self.lock.release()
 
 class QtBigText(QWidget):
   def __init__(self, conf):
