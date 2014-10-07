@@ -1,12 +1,13 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Time::HiRes qw(sleep time);
 
 my $script = "/opt/qtbigtext/qtbigtext.py";
 
 my $dbusTimeoutMillis = 1000;
-my $dbusRetries = 10;
-my $retryDelay = 1;
+my $dbusRetryDelayMillis = 100;
+my $dbusRetryMaxTimeoutMillis = 10000;
 
 sub python();
 sub killBigText();
@@ -15,6 +16,7 @@ sub dbusTest();
 sub dbusSetText($);
 sub dbusSend($@);
 sub setBigText($$);
+sub restartBigtext($$);
 
 my $usage = "Usage:
   $0 -h|--help
@@ -131,32 +133,34 @@ sub setBigText($$){
   my $str = shift;
   my $opts = shift;
 
-  my $dbusOk = 0;
-  if(isRunning()){
-    print "$script is running, calling dbus\n";
-    $dbusOk = dbusSetText $str;
-
-    if(not $dbusOk){
-      my $retries = $dbusRetries;
-      print "dbus call failed, retrying\n";
-      while(not $dbusOk and $retries > 0 and isRunning()){
-        print "waiting ${retryDelay}s and retrying {$retries retries left}\n";
-        sleep $retryDelay;
-        $dbusOk = dbusSetText $str;
-        $retries--;
-      }
+  if(isRunning and dbusTest){
+    if(dbusSetText $str){
+      print "dbus succeeded\n";
+    }else{
+      print "dbus failed, restarting\n";
+      restartBigtext $str, $opts;
     }
-
-    print "dbus call failed, killing and rerunning $script\n" if not $dbusOk;
+  }else{
+    print "not running or stalled, restarting\n";
+    restartBigtext $str, $opts;
   }
+}
 
-  if(not $dbusOk){
-    print "killing $script\n";
-    killBigText();
-    print "(re)running $script\n";
-    my $python = python;
-    $str =~ s/'/'\\''/g;
-    system "$python $script @$opts '$str' &";
+sub restartBigtext($$){
+  my ($str, $opts) = @_;
+  print "killing $script\n";
+  killBigText();
+  print "(re)running $script\n";
+  my $python = python;
+  $str =~ s/'/'\\''/g;
+  system "$python $script @$opts '$str' &";
+
+  my $start = time;
+  while(not dbusTest){
+    if(time - $start > $dbusRetryMaxTimeoutMillis){
+      die "FATAL: qtbigtext dbus failed to start\n";
+    }
+    sleep $dbusRetryDelayMillis/1000;
   }
 }
 
