@@ -11,7 +11,8 @@ my $retryDelay = 1;
 sub python();
 sub killBigText();
 sub isRunning();
-sub dbusCall($);
+sub dbusSetText($);
+sub dbusSend($@);
 sub setBigText($$);
 
 my $usage = "Usage:
@@ -100,11 +101,14 @@ sub isRunning(){
   return $? == 0;
 }
 
-sub dbusCall($){
+sub dbusSetText($){
   my $str = shift;
+  return dbusSend "setText", "string:$str";
+}
+sub dbusSend($@){
+  my ($method, @args) = @_;
   my $dest = "org.teleshoes.qtbigtext";
   my $path = "/";
-  my $method = "setText";
   my @cmd = ("dbus-send",
     "--session",
     "--print-reply",
@@ -113,7 +117,7 @@ sub dbusCall($){
     "--dest=$dest",
     $path,
     "$dest.$method",
-    "string:$str",
+    @args,
   );
   system @cmd;
   return $? == 0;
@@ -126,7 +130,7 @@ sub setBigText($$){
   my $dbusOk = 0;
   if(isRunning()){
     print "$script is running, calling dbus\n";
-    $dbusOk = dbusCall $str;
+    $dbusOk = dbusSetText $str;
 
     if(not $dbusOk){
       my $retries = $dbusRetries;
@@ -134,7 +138,7 @@ sub setBigText($$){
       while(not $dbusOk and $retries > 0 and isRunning()){
         print "waiting ${retryDelay}s and retrying {$retries retries left}\n";
         sleep $retryDelay;
-        $dbusOk = dbusCall $str;
+        $dbusOk = dbusSetText $str;
         $retries--;
       }
     }
