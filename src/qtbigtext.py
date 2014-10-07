@@ -178,6 +178,8 @@ class QtBigText(QWidget):
     self.layout = QVBoxLayout(self)
     self.labelCache = []
     self.frameCache = []
+    self.fontCache = {}
+    self.fontMetricCache = {}
     self.geometry = QDesktopWidget().availableGeometry()
     if len(self.conf['forceWidth']) > 0:
       w = int(self.conf['forceWidth'])
@@ -259,7 +261,7 @@ class QtBigText(QWidget):
   def screenHeight(self):
     return self.geometry.height()
   def calculateGrid(self, font):
-    fm = QFontMetrics(font)
+    fm = self.constructFontMetrics(font)
     w = fm.width('W')
     h = fm.height()
     rows = int(self.screenHeight() / h)
@@ -324,11 +326,18 @@ class QtBigText(QWidget):
   def textFits(self, text, font):
     return self.parseGrid(text, font) != None
   def constructFont(self, pointSize):
-    font = QFont()
-    font.setFamily(self.conf['typeface'])
-    font.setPointSizeF(pointSize)
-    font.setStyleStrategy(QFont.PreferAntialias)
-    return font
+    if not pointSize in self.fontCache:
+      font = QFont()
+      font.setFamily(self.conf['typeface'])
+      font.setPointSizeF(pointSize)
+      font.setStyleStrategy(QFont.PreferAntialias)
+      self.fontCache[pointSize] = font
+    return self.fontCache[pointSize]
+  def constructFontMetrics(self, font):
+    p = font.pointSizeF()
+    if not p in self.fontMetricCache:
+      self.fontMetricCache[p] = QFontMetrics(font)
+    return self.fontMetricCache[p]
   def testIndex(self, text, decaFontPtIndex):
     if decaFontPtIndex < 0:
       return True
