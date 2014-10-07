@@ -176,6 +176,8 @@ class QtBigText(QWidget):
     QWidget.__init__(self)
     self.conf = conf
     self.layout = QVBoxLayout(self)
+    self.labelCache = []
+    self.frameCache = []
     self.geometry = QDesktopWidget().availableGeometry()
     if len(self.conf['forceWidth']) > 0:
       w = int(self.conf['forceWidth'])
@@ -216,12 +218,16 @@ class QtBigText(QWidget):
       if lineType == LineType.separator:
         self.layout.addWidget(self.createSeparator())
   def createLabel(self, text, font):
-    label = QLabel(text)
-    label.setWordWrap(False)
+    if len(self.labelCache) == 0:
+      label = QLabel()
+      label.setWordWrap(False)
+      style = self.getAlignStyle()
+      if style != None:
+        label.setStyleSheet(style)
+      self.labelCache.append(label)
+    label = self.labelCache.pop()
+    label.setText(text)
     label.setFont(font)
-    style = self.getAlignStyle()
-    if style != None:
-      label.setStyleSheet(style)
     return label
   def getAlignStyle(self):
     align = self.conf['align'].lower()
@@ -234,14 +240,20 @@ class QtBigText(QWidget):
     else:
       return None
   def createSeparator(self):
-    sep = QFrame()
-    sep.setFrameShape(QFrame.HLine)
+    if len(self.frameCache) == 0:
+      sep = QFrame()
+      sep.setFrameShape(QFrame.HLine)
+      self.frameCache.append(sep)
+    sep = self.frameCache.pop()
     return sep
   def clear(self):
     while self.layout.count() > 0:
       w = self.layout.takeAt(0).widget()
       w.setParent(None)
-      w.deleteLater()
+      if isinstance(w, QLabel):
+        self.labelCache.append(w)
+      elif isinstance(w, QFrame):
+        self.frameCache.append(w)
   def screenWidth(self):
     return self.geometry.width()
   def screenHeight(self):
