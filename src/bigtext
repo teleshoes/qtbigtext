@@ -11,6 +11,7 @@ my $retryDelay = 1;
 sub python();
 sub killBigText();
 sub isRunning();
+sub dbusTest();
 sub dbusSetText($);
 sub dbusSend($@);
 sub setBigText($$);
@@ -101,6 +102,9 @@ sub isRunning(){
   return $? == 0;
 }
 
+sub dbusTest(){
+  return dbusSend "test";
+}
 sub dbusSetText($){
   my $str = shift;
   return dbusSend "setText", "string:$str";
