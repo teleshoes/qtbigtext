@@ -161,6 +161,9 @@ class QtBigTextDbusService(dbus.service.Object):
     return dbus.service.BusName(
       'org.teleshoes.qtbigtext', bus=dbus.SessionBus())
   @dbus.service.method('org.teleshoes.qtbigtext')
+  def test(self):
+    pass
+  @dbus.service.method('org.teleshoes.qtbigtext')
   def setText(self, text):
     self.lock.acquire()
     try:
