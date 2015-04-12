@@ -1,3 +1,7 @@
+qtbigtext (0.4.2) UNRELEASED; urgency=low
+  * mark as architecture-independent
+ -- teleshoes <elliot.wolk@gmail.com>  Sun, 12 Apr 2015 01:11:40 -0400
+
 qtbigtext (0.4.1) UNRELEASED; urgency=low
   * add 'align' config
   * bug fixes
