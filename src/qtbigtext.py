@@ -30,6 +30,7 @@ DEFAULT_CONFIG = {
   'typeface': 'Inconsolata',
   'minFontPt': '4',
   'maxFontPt': '600',
+  'fullScreen': 'true',
   'forceWidth': '',
   'forceHeight': '',
   'align': 'left',
@@ -112,7 +113,10 @@ def main():
 
     qtBigText = QtBigText(conf)
     qtBigText.setText(s)
-    qtBigText.showFullScreen()
+    if conf['fullScreen'].lower() == "false":
+      qtBigText.show()
+    else:
+      qtBigText.showFullScreen()
 
     DBusGMainLoop(set_as_default=True)
     QtBigTextDbusService(qtBigText)
