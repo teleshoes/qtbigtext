@@ -1,3 +1,7 @@
+qtbigtext (0.4.3) UNRELEASED; urgency=low
+  * add --fullScreen=false cmdline/conf option
+ -- teleshoes <elliot.wolk@gmail.com>  Fri, 21 Apr 2017 15:53:53 -0400
+
 qtbigtext (0.4.2) UNRELEASED; urgency=low
   * mark as architecture-independent
  -- teleshoes <elliot.wolk@gmail.com>  Sun, 12 Apr 2015 01:11:40 -0400
