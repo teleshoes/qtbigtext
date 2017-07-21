@@ -50,7 +50,7 @@ usage = ("Usage:\n"
   + "  OPTS are --KEY=VAL {VAL can be empty}, and override config file:\n"
   + "    " + CONF + "\n"
   + "  default values are as follows:\n"
-  + '\n'.join("    --"+k+"="+v for k, v in DEFAULT_CONFIG.items())
+  + '\n'.join("    --"+k+"="+v for k, v in sorted(DEFAULT_CONFIG.items()))
 )
 
 def printErr(msg):
