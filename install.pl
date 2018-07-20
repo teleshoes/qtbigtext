@@ -12,6 +12,8 @@ sub main(@){
     python3-pyside python3-dbus
   );
 
+  run "sudo", "python", "-m", "easy_install", "pyside2";
+
   run "sudo", "rm", "-rf", $libDest;
   run "sudo", "mkdir", "-p", $libDest;
   run "sudo", "cp", "src/bigtext", $binDest;

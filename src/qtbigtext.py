@@ -6,8 +6,9 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
-from PySide.QtGui import *
-from PySide.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtCore import *
+from PySide2.QtWidgets import *
 from dbus.mainloop.glib import DBusGMainLoop
 import dbus
 import dbus.service
