@@ -125,9 +125,10 @@ sub isRunning(){
 }
 
 sub ensureDbus(){
-  my $start = time;
+  my $startMillis = int(time * 1000.0);
   while(not dbusTest){
-    if(time - $start > $dbusRetryMaxTimeoutMillis){
+    my $nowMillis = int(time * 1000.0);
+    if($nowMillis - $startMillis > $dbusRetryMaxTimeoutMillis){
       die "FATAL: qtbigtext dbus failed to start\n";
     }
     sleep $dbusRetryDelayMillis/1000;
