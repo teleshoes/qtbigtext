@@ -12,6 +12,7 @@ my $dbusRetryMaxTimeoutMillis = 10000;
 sub python();
 sub killBigText();
 sub isRunning();
+sub ensureDbus();
 sub dbusTest();
 sub dbusSetText($);
 sub dbusSend($@);
@@ -123,6 +124,15 @@ sub isRunning(){
   return $? == 0;
 }
 
+sub ensureDbus(){
+  my $start = time;
+  while(not dbusTest){
+    if(time - $start > $dbusRetryMaxTimeoutMillis){
+      die "FATAL: qtbigtext dbus failed to start\n";
+    }
+    sleep $dbusRetryDelayMillis/1000;
+  }
+}
 sub dbusTest(){
   return dbusSend "test";
 }
@@ -174,13 +184,7 @@ sub restartBigtext($$){
   $str =~ s/'/'\\''/g;
   system "$python $script @$opts '$str' &";
 
-  my $start = time;
-  while(not dbusTest){
-    if(time - $start > $dbusRetryMaxTimeoutMillis){
-      die "FATAL: qtbigtext dbus failed to start\n";
-    }
-    sleep $dbusRetryDelayMillis/1000;
-  }
+  ensureDbus();
 }
 
 &main(@ARGV);
