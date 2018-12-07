@@ -26,6 +26,7 @@ my $usage = "Usage:
      Kill qtbigtext
 
   $0 [OPTS] --wait [TEXT TEXT ...]
+  $0 [OPTS] --wait FILE_NAME
     invoke qtbigtext directly and wait for it to end
 
   $0 [OPTS] --stdin
@@ -75,7 +76,15 @@ sub main(@){
       setBigText $str, $opts if $str ne "";
     }
   }elsif($cmd eq "--wait"){
-    my $text = "@_";
+    my $text;
+    if(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
+      my $file = shift;
+      open FH, "< $file";
+      $text = join '', <FH>;
+      close FH;
+    }else{
+      $text = "@_";
+    }
     my $python = python();
     exec $python, $script, @$opts, $text;
   }else{
