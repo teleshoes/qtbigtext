@@ -26,6 +26,10 @@ my $usage = "Usage:
   $0 [OPTS] -k
      Kill qtbigtext
 
+  $0 [OPTS] --ensure-dbus
+     check for dbus service every ${dbusTimeoutMillis}ms
+     exit when it succeeds, OR after ${dbusRetryMaxTimeoutMillis}ms
+
   $0 [OPTS] --wait [TEXT TEXT ...]
   $0 [OPTS] --wait FILE_NAME
     invoke qtbigtext directly and wait for it to end
@@ -56,11 +60,13 @@ sub main(@){
   }
 
   my $cmd = '';
-  $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--stdin|--wait)$/;
+  $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--ensure-dbus|--stdin|--wait)$/;
 
   if($cmd eq "-k"){
     die $usage if @_ > 0;
     killBigText();
+  }elsif($cmd eq "--ensure-dbus"){
+    ensureDbus();
   }elsif($cmd eq "--stdin"){
     die $usage if @_ > 0;
     my $line;
