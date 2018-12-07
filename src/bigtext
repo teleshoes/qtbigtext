@@ -78,14 +78,17 @@ sub main(@){
     my $text = "@_";
     my $python = python();
     exec $python, $script, @$opts, $text;
-  }elsif(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
-    my $file = shift;
-    open FH, "< $file";
-    my $contents = join '', <FH>;
-    close FH;
-    setBigText $contents, $opts;
   }else{
-    setBigText "@_", $opts;
+    my $text;
+    if(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
+      my $file = shift;
+      open FH, "< $file";
+      my $contents = join '', <FH>;
+      close FH;
+    }else{
+      $text = "@_";
+    }
+    setBigText $text, $opts;
   }
 }
 
