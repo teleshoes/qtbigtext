@@ -25,6 +25,9 @@ my $usage = "Usage:
   $0 [OPTS] -k
      Kill qtbigtext
 
+  $0 [OPTS] --wait [TEXT TEXT ...]
+    invoke qtbigtext directly and wait for it to end
+
   $0 [OPTS] --stdin
      Read lines from stdin, backslash interpolate them,
        and call qtbigtext for each parsed line
@@ -51,7 +54,7 @@ sub main(@){
   }
 
   my $cmd = '';
-  $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--stdin)$/;
+  $cmd = shift if @_ > 0 and $_[0] =~ /^(-k|--stdin|--wait)$/;
 
   if($cmd eq "-k"){
     die $usage if @_ > 0;
@@ -71,6 +74,10 @@ sub main(@){
       $str =~ s/\\([\\tn])/$backslashReplace{$1}/g;
       setBigText $str, $opts if $str ne "";
     }
+  }elsif($cmd eq "--wait"){
+    my $text = "@_";
+    my $python = python();
+    exec $python, $script, @$opts, $text;
   }elsif(@_ == 1 and $_[0] !~ /\n/ and -e $_[0]){
     my $file = shift;
     open FH, "< $file";
