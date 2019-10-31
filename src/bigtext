@@ -101,6 +101,7 @@ sub main(@){
       open FH, "< $file";
       my $contents = join '', <FH>;
       close FH;
+      $text = $contents;
     }else{
       $text = "@_";
     }
