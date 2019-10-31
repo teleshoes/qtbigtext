@@ -9,11 +9,9 @@ my $libDest = "/opt/qtbigtext";
 
 sub main(@){
   run "sudo", "apt-get", "install", qw(
-    python3-pyside python3-dbus
-    python-dbus
+    python3-pyqt5 python3-dbus
+    python-pyqt5 python-dbus
   );
-
-  run "sudo", "python", "-m", "easy_install", "pyside2";
 
   run "sudo", "rm", "-rf", $libDest;
   run "sudo", "mkdir", "-p", $libDest;
