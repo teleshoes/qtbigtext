@@ -50,8 +50,9 @@ my $usage = "Usage:
   qtbigtext is called with dbus-send if its running,
     or invoked directly otherwise.
 
-  OPTS are --KEY=VAL {VAL can be empty}, and are passed into qtbigtext
-    only when invoked directly.
+  OPTS
+    OPTS are passed into qtbigtext only when invoked directly, NOT via dbus cmds.
+      --KEY=VAL  any KEY and VAL (including empty VAL)
 ";
 
 sub main(@){
@@ -59,7 +60,12 @@ sub main(@){
 
   my $opts = [];
   while(@_ > 0 and $_[0] =~ /^--[a-zA-Z0-9_\-]+=.*$/){
-    push @$opts, shift;
+    my $opt = shift;
+    if($opt =~ /^(--[a-zA-Z0-9_\-]+=.*)$/){
+      push @$opts, $opt;
+    }else{
+      die "ERROR: malformed opt: $opt\n";
+    }
   }
 
   my $cmd = '';
