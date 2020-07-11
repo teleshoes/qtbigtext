@@ -10,7 +10,6 @@ my $libDest = "/opt/qtbigtext";
 sub main(@){
   run "sudo", "apt-get", "install", qw(
     python3-pyqt5 python3-dbus
-    python-pyqt5 python-dbus
   );
 
   run "sudo", "rm", "-rf", $libDest;
