@@ -12,6 +12,7 @@ my $dbusRetryMaxTimeoutMillis = 10000;
 my @PYTHON_EXEC_NAMES = qw(python3 python2.7 python2.6 python2 python);
 
 sub python();
+sub testPythonPyQt5($);
 sub killBigText();
 sub isRunning();
 sub ensureDbus();
@@ -114,13 +115,23 @@ sub main(@){
 sub python(){
   my $python = '';
   for my $pythonExecName(@PYTHON_EXEC_NAMES){
-    $python = `which $pythonExecName 2>/dev/null`;
-    chomp $python;
-    if($python =~ /python/){
-      return $python;
+    my $pythonExec = `which $pythonExecName`;
+    chomp $pythonExec;
+    if($pythonExec =~ /python/ and testPythonQt5($pythonExec)){
+      return $pythonExec;
     }
   }
-  die "ERROR: could not find any python exec\n";
+  die "ERROR: could not import PyQt5 using any of: @PYTHON_EXEC_NAMES\n";
+}
+
+sub testPythonQt5($){
+  my ($pythonExec) = @_;
+  my $testOut = `$pythonExec -c 'import PyQt5; print("PyQt5 FOUND")' 2>&1`;
+  if($testOut =~ /PyQt5 FOUND/){
+    return 1;
+  }else{
+    return 0;
+  }
 }
 
 sub killBigText(){
