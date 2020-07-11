@@ -113,6 +113,11 @@ def main():
     app.setStyleSheet("QWidget { background-color : %s; color : %s;}" % (
       conf['bgColor'], conf['fgColor']))
 
+    if conf['rotate'].lower() == 'true':
+      (w, h) = (conf['forceWidth'], conf['forceHeight'])
+      conf['forceWidth'] = h
+      conf['forceHeight'] = w
+
     qtBigText = QtBigText(conf)
     qtBigText.setText(s)
 
