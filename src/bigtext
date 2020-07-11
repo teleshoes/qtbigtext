@@ -132,6 +132,7 @@ sub isRunning(){
 }
 
 sub ensureDbus(){
+  print "\nTESTING DBUS\n";
   my $startMillis = int(time * 1000.0);
   while(not dbusTest){
     my $nowMillis = int(time * 1000.0);
@@ -140,6 +141,7 @@ sub ensureDbus(){
     }
     sleep $dbusRetryDelayMillis/1000;
   }
+  print "SUCCESS\n\n";
 }
 sub dbusTest(){
   return dbusSend "test";
