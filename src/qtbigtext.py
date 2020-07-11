@@ -31,6 +31,7 @@ DEFAULT_CONFIG = {
   'typeface': 'Inconsolata',
   'minFontPt': '4',
   'maxFontPt': '600',
+  'rotate': 'false',
   'fullScreen': 'true',
   'forceWidth': '',
   'forceHeight': '',
@@ -114,10 +115,26 @@ def main():
 
     qtBigText = QtBigText(conf)
     qtBigText.setText(s)
-    if conf['fullScreen'].lower() == "false":
-      qtBigText.show()
+
+    if conf['rotate'].lower() == 'true':
+      graphicsView = QGraphicsView()
+      scene = QGraphicsScene(graphicsView)
+      graphicsView.setScene(scene)
+
+      proxy = QGraphicsProxyWidget()
+      proxy.setWidget(qtBigText)
+      proxy.setTransformOriginPoint(proxy.boundingRect().center())
+      proxy.setRotation(90)
+      scene.addItem(proxy)
+
+      widget = graphicsView
     else:
-      qtBigText.showFullScreen()
+      widget = qtBigText
+
+    if conf['fullScreen'].lower() == "false":
+      widget.show()
+    else:
+      widget.showFullScreen()
 
     DBusGMainLoop(set_as_default=True)
     QtBigTextDbusService(qtBigText)
