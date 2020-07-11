@@ -53,6 +53,8 @@ my $usage = "Usage:
   OPTS
     OPTS are passed into qtbigtext only when invoked directly, NOT via dbus cmds.
       --KEY=VAL  any KEY and VAL (including empty VAL)
+      -f         same as: --fullscreen=true
+      -w         same as: --fullscreen=false
       <W>x<H>    same as: --forceWidth=<W>  --forceHeight=<H>
 ";
 
@@ -60,10 +62,14 @@ sub main(@){
   die $usage if @_ == 1 and $_[0] =~ /^(-h|--help)$/;
 
   my $opts = [];
-  while(@_ > 0 and $_[0] =~ /^(--[a-zA-Z0-9_\-]+=.*|\d+x\d+)$/){
+  while(@_ > 0 and $_[0] =~ /^(--[a-zA-Z0-9_\-]+=.*|-f|-w|\d+x\d+)$/){
     my $opt = shift;
     if($opt =~ /^(--[a-zA-Z0-9_\-]+=.*)$/){
       push @$opts, $opt;
+    }elsif($opt =~ /^(-f)$/){
+      push @$opts, "--fullScreen=true";
+    }elsif($opt =~ /^(-w)$/){
+      push @$opts, "--fullScreen=false";
     }elsif($opt =~ /^(\d+)x(\d+)$/){
       push @$opts, "--forceWidth=$1";
       push @$opts, "--forceHeight=$2";
