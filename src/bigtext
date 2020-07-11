@@ -114,10 +114,13 @@ sub main(@){
 sub python(){
   my $python = '';
   for my $pythonExecName(@PYTHON_EXEC_NAMES){
-    $python = `which $pythonExecName 2>/dev/null` if $python !~ /python/;
+    $python = `which $pythonExecName 2>/dev/null`;
+    chomp $python;
+    if($python =~ /python/){
+      return $python;
+    }
   }
-  chomp $python;
-  return $python;
+  die "ERROR: could not find any python exec\n";
 }
 
 sub killBigText(){
