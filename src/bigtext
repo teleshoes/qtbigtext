@@ -9,6 +9,8 @@ my $dbusTimeoutMillis = 1000;
 my $dbusRetryDelayMillis = 100;
 my $dbusRetryMaxTimeoutMillis = 10000;
 
+my @PYTHON_EXEC_NAMES = qw(python3 python2.7 python2.6 python2 python);
+
 sub python();
 sub killBigText();
 sub isRunning();
@@ -111,11 +113,9 @@ sub main(@){
 
 sub python(){
   my $python = '';
-  $python = `which python3   2>/dev/null` if $python !~ /python/;
-  $python = `which python2.7 2>/dev/null` if $python !~ /python/;
-  $python = `which python2.6 2>/dev/null` if $python !~ /python/;
-  $python = `which python2   2>/dev/null` if $python !~ /python/;
-  $python = `which python    2>/dev/null` if $python !~ /python/;
+  for my $pythonExecName(@PYTHON_EXEC_NAMES){
+    $python = `which $pythonExecName 2>/dev/null` if $python !~ /python/;
+  }
   chomp $python;
   return $python;
 }
