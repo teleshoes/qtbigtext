@@ -111,11 +111,11 @@ sub main(@){
 
 sub python(){
   my $python = '';
+  $python = `which python3   2>/dev/null` if $python !~ /python/;
   $python = `which python2.7 2>/dev/null` if $python !~ /python/;
   $python = `which python2.6 2>/dev/null` if $python !~ /python/;
   $python = `which python2   2>/dev/null` if $python !~ /python/;
   $python = `which python    2>/dev/null` if $python !~ /python/;
-  $python = `which python3   2>/dev/null` if $python !~ /python/;
   chomp $python;
   return $python;
 }
